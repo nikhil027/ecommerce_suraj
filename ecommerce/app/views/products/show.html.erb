@@ -1,0 +1,75 @@
+<p id="notice"><%= notice %></p>
+
+<%= image_tag(@product.cover_url) %>
+
+<p>
+  <strong>Category:</strong>
+  <%= link_to @product.category.name, category_path(@product.category_id) %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @product.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @product.description %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @product.price %>
+</p>
+
+<p>
+  <strong>Availability:</strong>
+  <%= @product.availability %>
+</p>
+
+<p>
+  <strong>Stock:</strong>
+  <%= @product.stock %>
+</p>
+
+<%= form_for Cart.new do |f| %>  on the show page we instantiate a object 
+  <%= f.hidden_field :product_id, value: @product.id %>
+  <lable>Quantity</lable>
+  <%= f.select :quantity, %w{1 2 3 4 5} %>
+  </br>
+  <%= f.submit "Add to Cart" %>
+<% end %>
+
+<% if user_signed_in? && current_user.is_admin %>
+  <%= link_to 'Edit', edit_product_path(@product) %> 
+<% end %>
+
+<h2> listing of reviews </h2>
+
+<%= @product.reviews.order('rating DESC').each do |review| %>
+    <ul>
+      <li><%= review.title %><br/>
+          <%= review.rating %> <br/>
+          <%= review.body %><br/>
+        </li>
+    </ul>
+  <% end %>
+    
+<%= form_for Review.new do |f| %>
+  <%= f.label :Title %><br/>
+    <%= f.text_field :title %><br/>
+
+    <%= f.label :rating %><br/>
+    <%= f.radio_button :rating , 1 %> 1 <%= f.radio_button :rating , 2 %> 2 <%= f.radio_button :rating , 3 %> 3 <%= f.radio_button :rating , 4 %> 4 <%= f.radio_button :rating , 5 %> 5 <br/>
+
+    <%= f.label :body %><br/>
+    <%= f.text_area :body %><br/>
+
+    <%= f.hidden_field :product_id , value: @product_id %><br/>
+    <%= f.hidden_field :user_id , value: @user_id %><br/>
+
+
+    <%= f.submit "Add Review" %>
+   <%end%>
+<%= link_to 'Back', products_path %>
+

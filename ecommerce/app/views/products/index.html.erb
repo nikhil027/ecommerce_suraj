@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Products (<%= @products.count %>)</h1>
+
+<%= form_tag("/products", method: :get) do %>
+  <%= text_field_tag :name %>
+  <%= submit_tag "search" %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Availability</th>
+      <th>Stock</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td>
+        <% if product.cover_url.nil? %>
+          <%= image_tag("/default_product.jpg", size: "150x150") %>
+        <% else %>
+          <%= image_tag(product.cover_url, size: "150x150") %>
+        <% end %>
+        </td>
+        <td><%= link_to product.category.name, category_path(product.category) %></td>
+        <td><%= link_to product.name , product_path(product.id)%></td>
+        <td><%= product.description %></td>
+        <td><%= product.price %></td>
+        <td><%= product.availability %></td>
+        <td><%= product.stock %></td>
+
+        <% if user_signed_in? && current_user.is_admin %>
+
+
+
+        <td><%= link_to 'Edit', edit_product_path(product) %></td>
+        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Product', new_product_path %>

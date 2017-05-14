@@ -1,0 +1,13 @@
+<h2> Category Wise Products </h2>
+
+<% data = {} %>
+
+<% @categories.each do |category|
+	data[category.name] = category.products.size
+  end %>
+
+<%#= pie_chart(data) %>
+
+<%= column_chart(data) %>
+
+<%#= bar_chart(data) %>

@@ -1,0 +1,48 @@
+<% if @line_items.empty? %>
+	<h2>Your cart is empty</h2>
+	<p>Continue shopping <%= link_to "here", products_path %></p>
+<% else %>
+
+<h2>Shopping Cart</h2>
+<hr>
+	<% total = 0 %>
+	<table border="1">
+		<thead>
+			<tr>
+				<th> </th>
+				<th>Name</th>
+				<th>Price (INR)</th>
+				<th>Quantity</th>
+				<th>Total</th>
+				<th> Actions </th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @line_items.each do |line_item| %>
+				<tr>
+					<td><%= image_tag(line_item.product.cover_url, size: "100x100") %></td>
+					<td> <%= link_to line_item.product.name , product_path(line_item.product_id), target: "_blank" %> </td>
+					<td> <%= line_item.product.price %> </td>
+
+					<td>
+						<%= form_for line_item do |f| %>
+							<%= f.select :quantity, (1..10).to_a %>
+							<%= f.submit %> 
+						<% end %>
+							<% line_item.quantity %>
+					</td>
+					<td> <%= line_item.quantity * line_item.product.price %>
+						<% total += line_item.quantity * line_item.product.price %></td>
+
+					<td> <%= link_to "remove", cart_path(line_item), method: :delete, data: {confirm: "are you sure ?"} %></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+
+	Grand total : <%= total %>
+
+	<%= form_for Order.new do |f| %>
+		<% f.submit "Place My Order" %>
+	<% end %>
+<% end %>
